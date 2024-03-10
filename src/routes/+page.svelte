@@ -1,15 +1,13 @@
 <script lang="ts">
+	import { databaseReady } from '$lib/data/databaseReady';
 	import { SqlJsDataSource } from '$lib/dataSource';
 	import { Period } from '$lib/typeorm/entities/Period';
 	import { Visit } from '$lib/typeorm/entities/Visit';
-	import { onMount } from 'svelte';
 
 	let visitAmount = 0;
 	let visitPeriod: number;
-
-	let possiblePeriods = SqlJsDataSource.manager.find(Period).then((periods) => {
-		visitPeriod = periods[0].id;
-		return periods;
+	let possiblePeriods: Promise<Period[]> = new Promise((resolve) => {
+		resolve([]);
 	});
 
 	let visits: Visit[] = [];
@@ -22,9 +20,16 @@
 		});
 	}
 
-	onMount(async () => {
-		getUpdatedVisits();
-	});
+	$: {
+		if ($databaseReady) {
+			getUpdatedVisits();
+
+			possiblePeriods = SqlJsDataSource.manager.find(Period).then((periods) => {
+				visitPeriod = periods[0].id;
+				return periods;
+			});
+		}
+	}
 
 	async function addVisit() {
 		const periods = await possiblePeriods;
@@ -42,6 +47,15 @@
 		getUpdatedVisits();
 	}
 </script>
+
+<button
+	type="button"
+	on:click={() => {
+		SqlJsDataSource.dropDatabase();
+	}}
+>
+	Drop Database
+</button>
 
 <h1>Add Visit</h1>
 
@@ -69,7 +83,7 @@
 	</select>
 </div>
 
-<button type="button" on:click={addVisit}> Add Visit </button>
+<button type="button" on:click={addVisit} disabled={!$databaseReady}> Add Visit </button>
 
 <hr />
 

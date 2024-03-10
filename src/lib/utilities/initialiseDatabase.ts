@@ -1,5 +1,7 @@
 import { databaseReady } from "$lib/data/databaseReady";
 import { SqlJsDataSource } from "$lib/dataSource";
+
+
 export async function initialiseDatabase() {
     try {
         console.log('initialising database');
@@ -12,5 +14,4 @@ export async function initialiseDatabase() {
         console.error(error);
         throw new Error('Unable to connect to db');
     }
-
 }

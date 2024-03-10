@@ -29,9 +29,11 @@ export default defineConfig({
     build: {
         commonjsOptions: {
             transformMixedEsModules: true,
+        },
+        minify: 'terser',
+        terserOptions: {
+            keep_classnames: true,
         }
     },
-    ssr: {
-        external: ['reflect-metadata'],
-    },
+
 });

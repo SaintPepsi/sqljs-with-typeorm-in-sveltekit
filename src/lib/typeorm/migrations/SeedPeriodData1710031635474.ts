@@ -3,7 +3,7 @@ import { type MigrationInterface, type QueryRunner } from "typeorm";
 
 const initColumn = "period" satisfies keyof Period;
 
-export class SeedPeriodData0000000000001 implements MigrationInterface {
+export class SeedPeriodData1710031635474 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         // Populate database with goal categories
         await queryRunner.query(`
